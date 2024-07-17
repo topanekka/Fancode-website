@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FanCode Live Links</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #1c1c1c;
+            color: #fff;
+        }
+        header {
+            width: 100%;
+            background-color: darkorange;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 2em;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            animation: fadeIn 1s ease-in-out;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 1200px;
+            box-sizing: border-box;
+            overflow: hidden;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        .channel {
+            background: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+            aspect-ratio: 1 / 1; /* Make it square */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .channel:hover {
+            transform: translateY(-10px);
+            background-color: #3e3e3e;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+        .channel img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .channel h3 {
+            font-size: 0.9em;
+            margin: 5px 0;
+            color: #ddd;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>FanCode Live Links</header>
+    <div class="container" id="channels"></div>
+
+    <script>
+        const playlistUrl = 'https://raw.githubusercontent.com/byte-capsule/FanCode-Hls-Fetcher/main/Fancode_Live.m3u';
+
+        async function fetchPlaylist() {
+            try {
+                const response = await fetch(playlistUrl);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const text = await response.text();
+                const channels = parseM3U(text);
+                displayChannels(channels);
+            } catch (error) {
+                console.error('Failed to fetch playlist:', error);
+            }
+        }
+
+        function parseM3U(data) {
+            const lines = data.split('\n');
+            const channels = [];
+            let currentChannel = null;
+
+            lines.forEach(line => {
+                if (line.startsWith('#EXTINF:')) {
+                    const info = line.split('"');
+                    const durationTitle = info[0].split(' ', 2)[1];
+                    const logo = /tvg-logo="([^"]+)"/.exec(durationTitle);
+                    currentChannel = { 
+                        title: info[1], 
+                        logo: logo ? logo[1] : 'https://te.legra.ph/file/a818481b1a0d6fa5794e7.png',
+                        url: ''
+                    };
+                } else if (line.startsWith('http')) {
+                    if (currentChannel) {
+                        currentChannel.url = line.trim();
+                        channels.push(currentChannel);
+                        currentChannel = null;
+                    }
+                }
+            });
+
+            return channels;
+        }
+
+        function displayChannels(channels) {
+            const container = document.getElementById('channels');
+            container.innerHTML = ''; // Clear existing channels
+
+            channels.forEach(channel => {
+                const div = document.createElement('div');
+                div.className = 'channel';
+                div.innerHTML = `
+                    <img src="${channel.logo}" alt="${channel.title}" onerror="this.onerror=null; this.src='https://te.legra.ph/file/a818481b1a0d6fa5794e7.png';">
+                    <h3>${channel.title}</h3>
+                `;
+                div.addEventListener('click', () => {
+                    // Open the channel link in a new tab
+                    window.open(channel.url, '');
+                });
+                container.appendChild(div);
+            });
+        }
+
+        fetchPlaylist();
+    </script>
+<div><hr><center><b> Links Are Directly Coming from Fancode App .
+    <hr></div>
+    
+
+<div><hr><table><tr>
+<td><a href="https://whatsapp.com/channel/0029VaGUgFxKrWR56EZxKz2l"><img src="https://iili.io/dfzAMPt.png"width="100%"></a></td>
+<td><a href="https://t.me/LiveCricket_abot"><img src="https://iili.io/dfzCTb9.png"width="100%"></a></td>
+<tr></table>
+<hr></div>
+
+<div>
+        <a href="https://4exk.short.gy/Live-sports-App"><img src="https://te.legra.ph/file/38c07c978ea6e63c68b02.png" width="100%"></a>
+
+   </div><hr>
+
+</body>
+</html>
